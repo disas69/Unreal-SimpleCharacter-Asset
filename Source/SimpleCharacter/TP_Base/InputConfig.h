@@ -4,12 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
-#include "TPSInputConfig.generated.h"
+#include "InputConfig.generated.h"
 
 class UInputAction;
 
 UCLASS()
-class SIMPLECHARACTER_API UTPSInputConfig : public UDataAsset
+class SIMPLECHARACTER_API UInputConfig : public UDataAsset
 {
 	GENERATED_BODY()
 
@@ -18,7 +18,7 @@ public:
     UInputAction* MoveAction = nullptr;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Input)
-    UInputAction* RotateAction = nullptr;
+    UInputAction* LookAction = nullptr;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Input)
     UInputAction* JumpAction = nullptr;

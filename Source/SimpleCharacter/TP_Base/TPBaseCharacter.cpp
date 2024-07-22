@@ -1,14 +1,14 @@
 // Eugene Esaulenko, All Rights Reserved.
 
-#include "TPS/TPSCharacterBase.h"
+#include "TPBaseCharacter.h"
+#include "InputConfig.h"
 #include "Camera/CameraComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
-#include "TPS/TPSInputConfig.h"
 
-ATPSCharacterBase::ATPSCharacterBase()
+ATPBaseCharacter::ATPBaseCharacter()
 {
     PrimaryActorTick.bCanEverTick = true;
 
@@ -31,12 +31,12 @@ ATPSCharacterBase::ATPSCharacterBase()
     CameraComponent->bUsePawnControlRotation = false;
 }
 
-void ATPSCharacterBase::BeginPlay()
+void ATPBaseCharacter::BeginPlay()
 {
     Super::BeginPlay();
 }
 
-void ATPSCharacterBase::Move(const FInputActionValue& Value)
+void ATPBaseCharacter::Move(const FInputActionValue& Value)
 {
     const FVector2D MovementVector = Value.Get<FVector2D>();
 
@@ -52,28 +52,28 @@ void ATPSCharacterBase::Move(const FInputActionValue& Value)
     AddMovementInput(RightDirection, MovementVector.X);
 }
 
-void ATPSCharacterBase::Rotate(const FInputActionValue& Value)
+void ATPBaseCharacter::Look(const FInputActionValue& Value)
 {
-    const FVector2D RotateAxisVector = Value.Get<FVector2D>();
+    const FVector2D LookAxisVector = Value.Get<FVector2D>();
 
-    const float TurnAmount = RotateAxisVector.X * CameraMovementRate * GetWorld()->GetDeltaSeconds();
+    const float TurnAmount = LookAxisVector.X * CameraMovementRate * GetWorld()->GetDeltaSeconds();
     AddControllerYawInput(TurnAmount);
 
-    const float LookAmount = RotateAxisVector.Y * CameraMovementRate * GetWorld()->GetDeltaSeconds();
+    const float LookAmount = LookAxisVector.Y * CameraMovementRate * GetWorld()->GetDeltaSeconds();
     AddControllerPitchInput(LookAmount);
 }
 
-void ATPSCharacterBase::Jump(const FInputActionValue& Value)
+void ATPBaseCharacter::Jump(const FInputActionValue& Value)
 {
     Super::Jump();
 }
 
-void ATPSCharacterBase::Tick(float DeltaTime)
+void ATPBaseCharacter::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
 }
 
-void ATPSCharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+void ATPBaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
     Super::SetupPlayerInputComponent(PlayerInputComponent);
 
@@ -84,7 +84,7 @@ void ATPSCharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 
     // Bind actions
     UEnhancedInputComponent* Input = Cast<UEnhancedInputComponent>(PlayerInputComponent);
-    Input->BindAction(InputConfig->MoveAction, ETriggerEvent::Triggered, this, &ATPSCharacterBase::Move);
-    Input->BindAction(InputConfig->RotateAction, ETriggerEvent::Triggered, this, &ATPSCharacterBase::Rotate);
-    Input->BindAction(InputConfig->JumpAction, ETriggerEvent::Triggered, this, &ATPSCharacterBase::Jump);
+    Input->BindAction(InputConfig->MoveAction, ETriggerEvent::Triggered, this, &ATPBaseCharacter::Move);
+    Input->BindAction(InputConfig->LookAction, ETriggerEvent::Triggered, this, &ATPBaseCharacter::Look);
+    Input->BindAction(InputConfig->JumpAction, ETriggerEvent::Triggered, this, &ATPBaseCharacter::Jump);
 }
